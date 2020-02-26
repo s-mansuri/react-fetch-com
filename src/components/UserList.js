@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Footer from './Footer';
+import Header from './Header';
+import Filters from './Filters';
 
 
 class UserList extends Component {
@@ -14,11 +17,12 @@ class UserList extends Component {
         }
  }
 
+
  componentDidMount(){
    axios.get('https://rickandmortyapi.com/api/character/')
     .then(response => {
         let userData = []
-        for(let i =0; i<= 19; i++){
+        for(let i =0; i< response.data.results.length; i++){
         userData.push(response.data.results[i])
     }
     this.setState({
@@ -50,12 +54,19 @@ filterStatus = (e) => {
     })
 } 
 
+
+
 speciesStatus = (e) => {
     this.setState({
         speciesStatus: e.target.value
     })
 } 
 
+changeStatus = () => {
+    this.setState({
+        filterStatus: 'alive'
+    })
+}
     render() {
 
         this.state.users.sort((a,b) => {
@@ -73,10 +84,10 @@ speciesStatus = (e) => {
 
         return (
         <div>
-            <div className="header" >
-                <img className="headerImg" alt="" src="https://cdn.worldvectorlogo.com/logos/react-1.svg"  /> <button className="button" onClick={this.sortItems.bind(this)}>{this.state.sort === 'asc' ? 'Sort DESC' : 'Sort ASC'}</button>
-                <input type="text" name="filter" placeholder="Filter by Status" className="inputField" onChange={this.filterStatus}/>
-                <input type="text" name="filter" placeholder="Filter by Species" className="inputField" onChange={this.speciesStatus}/>
+            <div>
+                <Header />
+                <button className="button" onClick={this.sortItems.bind(this)}>{this.state.sort === 'asc' ? 'Sort DESC' : 'Sort ASC'}</button>
+                <Filters filterStatus={this.filterStatus} speciesStatus={this.speciesStatus}  />
             </div>
             <div className="container">
                 {
@@ -91,7 +102,7 @@ speciesStatus = (e) => {
                     ))
                     
                 }
-                <div className="footer">$Mansuri</div>  
+                <Footer />
             </div>
         </div>
         )
